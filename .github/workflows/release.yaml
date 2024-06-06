@@ -10,7 +10,6 @@ on:
     types:
       - published
   workflow_dispatch:
-  # XXX(ddn): For testing
   pull_request:
 
 jobs:
@@ -48,7 +47,10 @@ jobs:
       id-token: write
     needs:
     - build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # Would be nice to do a test publish on every main change but this requires
+    # dynamic package versions; instead, expect this to be run manually.
+    #if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event.action == 'workflow_dispatch'
     steps:
     - uses: actions/download-artifact@v4
       with:
