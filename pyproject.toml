@@ -1,0 +1,154 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+# PEP-621 (standard project specification) will be part of Poetry 2.0
+#   https://github.com/python-poetry/roadmap/issues/3
+# until then, use [tool.poetry] instead of [project]
+name = "google-re2-stubs"
+description = "Typestubs for google-re2"
+authors = ["Donald Nguyen"]
+license = "MIT"
+version = "0.1.0"
+readme = "README.md"
+packages = [
+  { include = "re2-stubs", from = "src" }
+]
+
+[tool.poetry.dependencies]
+google-re2 = ">=1.0"
+python = "^3.8.0"
+
+[tool.poetry.group.dev.dependencies]
+pyright = "^1.1.365"
+mypy = "^1.10.0"
+ruff = "^0.4.7"
+
+[tool.ruff]
+force-exclude = true
+line-length = 88
+target-version = "py38"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+  "B",
+  "C",
+  "COM",
+  "D",
+  "DTZ",
+  "E",
+  "ERA",
+  "EXE",
+  "F",
+  "FA",
+  "FBT",
+  "FIX",
+  "G",
+  "I",
+  "ICN",
+  "INP",
+  "ISC002",
+  "N",
+  "NPY",
+  "PD",
+  "PERF",
+  "PGH",
+  "PIE",
+  "PL",
+  "PLC",
+  "PLR",
+  "PT",
+  "PTH",
+  "PYI",
+  "Q",
+  "RET",
+  "RSE",
+  "RUF",
+  "SIM",
+  "SLF",
+  "SLOT",
+  "T10",
+  "T20",
+  "TD",
+  "TID",
+  "TRY",
+  "UP",
+  "W",
+  "YTT",
+]
+
+ignore = [
+  # Conflicts with ruff format
+  "COM812",
+  # Allow explicit concatenation
+  "ISC003",
+  # Having issue link with TODO is not necessary
+  "TD003",
+  # Allow TODO to exist
+  "FIX002",
+  # Do not complain about raising exception without arguments
+  "RSE102",
+  # Allow non-trivial exception messages
+  "TRY003",
+  # Allow use of print
+  "T201",
+  # Don't require docstrings on public methods
+  "D102",
+  # Don't require docstrings on public functions
+  "D103",
+  # Don't require docstrings on magic methods
+  "D105",
+  # Don't complain about __init__ method docstrings
+  "D107",
+  # Commented out code is allowed
+  "ERA001",
+  # We use `+` to concat long log messages across lines
+  "G003",
+]
+[tool.ruff.lint.per-file-ignores]
+"src/**.pyi" = [
+  "N801",
+  "N802",
+  "N818",
+  "FBT001",
+  "FBT002",
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.pylint]
+max-args = 8
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.ruff.lint.pycodestyle]
+max-doc-length = 88
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.lint.isort]
+known-first-party = [
+  "re2",
+]
+
+[tool.pyright]
+include = ["src", "tests"]
+typeCheckingMode = "strict"
+# Enable additional checks beyond strict
+reportCallInDefaultInitializer = "error"
+reportImplicitOverride	= "error"
+reportImplicitStringConcatenation = "error"
+reportImportCycles = "error"
+reportPropertyTypeMismatch = "error"
+reportShadowedImports = "error"
+reportUninitializedInstanceVariable = "error"
+reportUnnecessaryTypeIgnoreComment = "error"
+
+[tool.mypy]
+strict = true
+packages = "re2-stubs"

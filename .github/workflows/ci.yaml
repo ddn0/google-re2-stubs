@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Have at most one workflow instance per PR or branch SHA
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - run: pipx install poetry==$POETRY_VERSION
+        env:
+          POETRY_VERSION: 1.8.2
+      - name: Set up python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.8"
+          cache: poetry
+      - run: poetry check
+      - run: poetry install --no-interaction
+      - name: Add poetry venv to path
+        run: echo "$(poetry env info --path)/bin" >> $GITHUB_PATH
+      - run: ruff check --output-format=github .
+      - run: mypy
+      - uses: jakebailey/pyright-action@v2

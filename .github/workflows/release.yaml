@@ -1,0 +1,80 @@
+name: release
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+  release:
+    types:
+      - published
+  workflow_dispatch:
+  # XXX(ddn): For testing
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hynek/build-and-inspect-python-package@v2
+
+  check-install:
+    # Create clean python environment to verify package works from scratch
+    runs-on: ubuntu-latest
+    needs:
+    - build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.8'
+      - uses: actions/download-artifact@v4
+        with:
+          name: Packages
+          path: dist
+      - run: pip install pyright mypy
+      - run: pip install ./dist/google_re2_stubs*.whl
+      - run: pyright tests/api
+      - run: mypy tests/api
+
+  release-test-pypi:
+    name: Release to test.pypi.org
+    runs-on: ubuntu-latest
+    environment: test-pypi
+    permissions:
+      # Required for trusted publishing
+      id-token: write
+    needs:
+    - build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+    - uses: actions/download-artifact@v4
+      with:
+        name: Packages
+        path: dist
+    - name: Upload package to test.pypi.org
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        repository-url: https://test.pypi.org/legacy/
+
+  release-pypi:
+    name: Release to pypi.org
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/google-re2-stubs
+    permissions:
+      # Required for trusted publishing
+      id-token: write
+    needs:
+    - build
+    if: github.event.action == 'published'
+    steps:
+    - uses: actions/download-artifact@v4
+      with:
+        name: Packages
+        path: dist
+    - name: Upload package to pypi.org
+      uses: pypa/gh-action-pypi-publish@release/v1
