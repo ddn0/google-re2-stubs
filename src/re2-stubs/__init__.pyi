@@ -4,10 +4,11 @@ from typing import (
     Generic,
     Iterator,
     Literal,
-    TypeAlias,
     TypeVar,
     overload,
 )
+
+from typing_extensions import TypeAlias
 
 # References:
 # - https://github.com/google/re2/blob/main/re2/re2.h and
