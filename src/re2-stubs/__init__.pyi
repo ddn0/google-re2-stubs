@@ -1,5 +1,4 @@
-from _collections_abc import Callable
-from typing import AnyStr, Generic, Iterator, Literal, TypeVar, overload
+from typing import AnyStr, Generic, Iterator, Literal, TypeVar, overload, Callable
 
 # References:
 # - https://github.com/google/re2/blob/main/re2/re2.h and
@@ -100,7 +99,7 @@ def subn(
 @overload
 def sub(
     pattern: _Regexp[str] | str,
-    repl: str,
+    repl: str | Callable[[_Match[str]], str],
     text: str,
     count: int = 0,
     options: Options | None = None,
@@ -108,7 +107,7 @@ def sub(
 @overload
 def sub(
     pattern: _Regexp[bytes] | bytes,
-    repl: bytes,
+    repl: bytes | Callable[[_Match[bytes]], bytes],
     text: bytes,
     count: int = 0,
     options: Options | None = None,
@@ -118,37 +117,87 @@ def purge() -> None: ...
 
 class _Regexp(Generic[AnyStr]):
     def __init__(self, pattern: AnyStr, options: Options) -> None: ...
-
+    @overload
     def search(
-        self, text: AnyStr, pos: int | None = None, endpos: int | None = None
-    ) -> _Match[AnyStr] | None: ...
-
+        self: _Regexp[str], text: str, pos: int | None = None, endpos: int | None = None
+    ) -> _Match[str] | None: ...
+    @overload
+    def search(
+        self: _Regexp[bytes],
+        text: bytes,
+        pos: int | None = None,
+        endpos: int | None = None,
+    ) -> _Match[bytes] | None: ...
+    @overload
     def match(
-        self, text: AnyStr, pos: int | None = None, endpos: int | None = None
-    ) -> _Match[AnyStr] | None: ...
-
+        self: _Regexp[str], text: str, pos: int | None = None, endpos: int | None = None
+    ) -> _Match[str] | None: ...
+    @overload
+    def match(
+        self: _Regexp[bytes],
+        text: bytes,
+        pos: int | None = None,
+        endpos: int | None = None,
+    ) -> _Match[bytes] | None: ...
+    @overload
     def fullmatch(
-        self, text: AnyStr, pos: int | None = None, endpos: int | None = None
-    ) -> _Match[AnyStr] | None: ...
-
+        self: _Regexp[str], text: str, pos: int | None = None, endpos: int | None = None
+    ) -> _Match[str] | None: ...
+    @overload
+    def fullmatch(
+        self: _Regexp[bytes],
+        text: bytes,
+        pos: int | None = None,
+        endpos: int | None = None,
+    ) -> _Match[bytes] | None: ...
+    @overload
     def finditer(
-        self, text: AnyStr, pos: int | None = None, endpos: int | None = None
-    ) -> Iterator[_Match[AnyStr]]: ...
-
+        self: _Regexp[str], text: str, pos: int | None = None, endpos: int | None = None
+    ) -> Iterator[_Match[str]]: ...
+    @overload
+    def finditer(
+        self: _Regexp[bytes],
+        text: bytes,
+        pos: int | None = None,
+        endpos: int | None = None,
+    ) -> Iterator[_Match[bytes]]: ...
     @overload
     def findall(
-        self, text: AnyStr, pos: int | None = None, endpos: int | None = None
-    ) -> list[AnyStr]: ...
-
-    def split(self, text: AnyStr, maxsplit: int = 0) -> list[AnyStr]: ...
-
-    def subn(self, repl: AnyStr, text: AnyStr, count: int = 0) -> tuple[AnyStr, int]: ...
-
+        self: _Regexp[str], text: str, pos: int | None = None, endpos: int | None = None
+    ) -> list[str]: ...
     @overload
-    def sub(self, repl: AnyStr, text: str, count: int = 0) -> AnyStr: ...
+    def findall(
+        self: _Regexp[bytes],
+        text: bytes,
+        pos: int | None = None,
+        endpos: int | None = None,
+    ) -> list[bytes]: ...
     @overload
-    def sub(self, repl: Callable[[_Match[AnyStr]], str], text: AnyStr, count: int = 0) -> AnyStr: ...
-
+    def split(self: _Regexp[str], text: str, maxsplit: int = 0) -> list[str]: ...
+    @overload
+    def split(self: _Regexp[bytes], text: bytes, maxsplit: int = 0) -> list[bytes]: ...
+    @overload
+    def subn(
+        self: _Regexp[str], repl: str, text: str, count: int = 0
+    ) -> tuple[str, int]: ...
+    @overload
+    def subn(
+        self: _Regexp[bytes], repl: bytes, text: bytes, count: int = 0
+    ) -> tuple[bytes, int]: ...
+    @overload
+    def sub(
+        self: _Regexp[str],
+        repl: str | Callable[[_Match[str]], str],
+        text: str,
+        count: int = 0,
+    ) -> str: ...
+    @overload
+    def sub(
+        self: _Regexp[bytes],
+        repl: bytes | Callable[[_Match[bytes]], bytes],
+        text: bytes,
+        count: int = 0,
+    ) -> bytes: ...
     @property
     def pattern(self) -> AnyStr: ...
     @property
