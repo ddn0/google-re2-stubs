@@ -1,5 +1,5 @@
 """Test completeness of stub with examples of re2 use."""
-
+# pyright: reportPrivateUsage = false
 from __future__ import annotations
 
 from typing import assert_type
