@@ -117,79 +117,37 @@ def purge() -> None: ...
 
 class _Regexp(Generic[AnyStr]):
     def __init__(self, pattern: AnyStr, options: Options) -> None: ...
-    @overload
+
     def search(
-        self: _Regexp[str], text: str, pos: int | None = None, endpos: int | None = None
-    ) -> _Match[str] | None: ...
-    @overload
-    def search(
-        self: _Regexp[bytes],
-        text: bytes,
-        pos: int | None = None,
-        endpos: int | None = None,
-    ) -> _Match[bytes] | None: ...
-    @overload
+        self, text: AnyStr, pos: int | None = None, endpos: int | None = None
+    ) -> _Match[AnyStr] | None: ...
+
     def match(
-        self: _Regexp[str], text: str, pos: int | None = None, endpos: int | None = None
-    ) -> _Match[str] | None: ...
-    @overload
-    def match(
-        self: _Regexp[bytes],
-        text: bytes,
-        pos: int | None = None,
-        endpos: int | None = None,
-    ) -> _Match[bytes] | None: ...
-    @overload
+        self, text: AnyStr, pos: int | None = None, endpos: int | None = None
+    ) -> _Match[AnyStr] | None: ...
+
     def fullmatch(
-        self: _Regexp[str], text: str, pos: int | None = None, endpos: int | None = None
-    ) -> _Match[str] | None: ...
-    @overload
-    def fullmatch(
-        self: _Regexp[bytes],
-        text: bytes,
-        pos: int | None = None,
-        endpos: int | None = None,
-    ) -> _Match[bytes] | None: ...
-    @overload
+        self, text: str, pos: int | None = None, endpos: int | None = None
+    ) -> _Match[AnyStr] | None: ...
+
     def finditer(
-        self: _Regexp[str], text: str, pos: int | None = None, endpos: int | None = None
-    ) -> Iterator[_Match[str]]: ...
-    @overload
-    def finditer(
-        self: _Regexp[bytes],
-        text: bytes,
-        pos: int | None = None,
-        endpos: int | None = None,
-    ) -> Iterator[_Match[bytes]]: ...
+        self, text: AnyStr, pos: int | None = None, endpos: int | None = None
+    ) -> Iterator[_Match[AnyStr]]: ...
+
     @overload
     def findall(
-        self: _Regexp[str], text: str, pos: int | None = None, endpos: int | None = None
-    ) -> list[str]: ...
+        self, text: AnyStr, pos: int | None = None, endpos: int | None = None
+    ) -> list[AnyStr]: ...
+
+    def split(self, text: AnyStr, maxsplit: int = 0) -> list[AnyStr]: ...
+
+    def subn(self, repl: str, text: AnyStr, count: int = 0) -> tuple[AnyStr, int]: ...
+
     @overload
-    def findall(
-        self: _Regexp[bytes],
-        text: bytes,
-        pos: int | None = None,
-        endpos: int | None = None,
-    ) -> list[bytes]: ...
+    def sub(self, repl: AnyStr, text: str, count: int = 0) -> AnyStr: ...
     @overload
-    def split(self: _Regexp[str], text: str, maxsplit: int = 0) -> list[str]: ...
-    @overload
-    def split(self: _Regexp[bytes], text: bytes, maxsplit: int = 0) -> list[bytes]: ...
-    @overload
-    def subn(
-        self: _Regexp[str], repl: str, text: str, count: int = 0
-    ) -> tuple[str, int]: ...
-    @overload
-    def subn(
-        self: _Regexp[bytes], repl: bytes, text: bytes, count: int = 0
-    ) -> tuple[bytes, int]: ...
-    @overload
-    def sub(self: _Regexp[str], repl: str, text: str, count: int = 0) -> str: ...
-    @overload
-    def sub(
-        self: _Regexp[bytes], repl: bytes, text: bytes, count: int = 0
-    ) -> bytes: ...
+    def sub(self, repl: _Match[AnyStr], text: bytes, count: int = 0) -> AnyStr: ...
+
     @property
     def pattern(self) -> AnyStr: ...
     @property
