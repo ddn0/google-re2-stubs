@@ -17,7 +17,7 @@ from typing_extensions import TypeAlias
 
 _T = TypeVar("_T")
 
-__Pattern: TypeAlias = _Regexp[str] | str | _Regexp[bytes] | bytes
+_Pattern: TypeAlias = _Regexp[str] | str | _Regexp[bytes] | bytes
 
 class error(Exception): ...
 
@@ -39,35 +39,35 @@ def compile(
     pattern: _Regexp[AnyStr] | AnyStr, options: Options | None = None
 ) -> _Regexp[AnyStr]: ...
 def search(
-    pattern: __Pattern, text: AnyStr, options: Options | None = None
+    pattern: _Pattern, text: AnyStr, options: Options | None = None
 ) -> _Match[AnyStr] | None: ...
 def match(
-    pattern: __Pattern, text: AnyStr, options: Options | None = None
+    pattern: _Pattern, text: AnyStr, options: Options | None = None
 ) -> _Match[AnyStr] | None: ...
 def fullmatch(
-    pattern: __Pattern, text: AnyStr, options: Options | None = None
+    pattern: _Pattern, text: AnyStr, options: Options | None = None
 ) -> _Match[AnyStr] | None: ...
 def finditer(
-    pattern: __Pattern, text: AnyStr, options: Options | None = None
+    pattern: _Pattern, text: AnyStr, options: Options | None = None
 ) -> Iterator[_Match[AnyStr]]: ...
 def findall(
-    pattern: __Pattern, text: AnyStr, options: Options | None = None
+    pattern: _Pattern, text: AnyStr, options: Options | None = None
 ) -> list[AnyStr]: ...
 def split(
-    pattern: __Pattern,
+    pattern: _Pattern,
     text: AnyStr,
     maxsplit: int = 0,
     options: Options | None = None,
 ) -> list[AnyStr]: ...
 def subn(
-    pattern: __Pattern,
+    pattern: _Pattern,
     repl: AnyStr | Callable[[_Match[AnyStr]], AnyStr],
     text: AnyStr,
     count: int = 0,
     options: Options | None = None,
 ) -> tuple[AnyStr, int]: ...
 def sub(
-    pattern: __Pattern,
+    pattern: _Pattern,
     repl: AnyStr | Callable[[_Match[AnyStr]], AnyStr],
     text: AnyStr,
     count: int = 0,
@@ -76,6 +76,10 @@ def sub(
 def escape(pattern: AnyStr) -> AnyStr: ...
 def purge() -> None: ...
 
+# re2 regexps produce match objects based on the text to match regardless
+# of the initial pattern the regexp was constructed with. Introduce a separately
+# constrained AnyStr which is uncorrelated with the string type the regexp
+# was originally constructed with to represent this re2 feature.
 _AnyStr2 = TypeVar("_AnyStr2", str, bytes)
 
 class _Regexp(Generic[AnyStr]):

@@ -33,3 +33,4 @@ jobs:
       - run: ruff check --output-format=github .
       - run: mypy
       - uses: jakebailey/pyright-action@v2
+      - run: pytest
