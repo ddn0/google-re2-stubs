@@ -24,6 +24,7 @@ python = "^3.8.0"
 pyright = "^1.1.365"
 mypy = "^1.10.0"
 ruff = "^0.4.7"
+pytest = "^8.3.3"
 
 [tool.ruff]
 force-exclude = true
@@ -152,3 +153,9 @@ reportUnnecessaryTypeIgnoreComment = "error"
 [tool.mypy]
 strict = true
 packages = "re2-stubs"
+
+[tool.pytest.ini_options]
+xfail_strict = true
+testpaths = [
+  "tests"
+]
