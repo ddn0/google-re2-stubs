@@ -10,7 +10,7 @@ name = "google-re2-stubs"
 description = "Typestubs for google-re2"
 authors = ["Donald Nguyen"]
 license = "MIT"
-version = "0.1.1"
+version = "0.1.2"
 readme = "README.md"
 packages = [
   { include = "re2-stubs", from = "src" }
