@@ -1,8 +1,8 @@
+from collections.abc import Iterator
 from typing import (
     AnyStr,
     Callable,
     Generic,
-    Iterator,
     Literal,
     TypeVar,
     overload,

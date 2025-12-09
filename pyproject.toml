@@ -18,7 +18,7 @@ packages = [
 
 [tool.poetry.dependencies]
 google-re2 = ">=1.0"
-python = "^3.8.0"
+python = "^3.9.0"
 
 [tool.poetry.group.dev.dependencies]
 pyright = "^1.1.365"
@@ -29,7 +29,7 @@ pytest = "^8.3.3"
 [tool.ruff]
 force-exclude = true
 line-length = 88
-target-version = "py38"
+target-version = "py39"
 src = ["src", "tests"]
 
 [tool.ruff.lint]
